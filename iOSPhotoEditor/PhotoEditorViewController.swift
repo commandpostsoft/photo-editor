@@ -262,15 +262,13 @@ public final class PhotoEditorViewController: UIViewController {
     // MARK: - Color Persistence
     private func loadSavedColors() {
         if let drawColorData = UserDefaults.standard.data(forKey: drawColorKey),
-           let savedDrawColor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: drawColorData),
-           let unwrappedDrawColor = savedDrawColor {
-            drawColor = unwrappedDrawColor
+           let savedDrawColor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: drawColorData) {
+            drawColor = savedDrawColor
         }
-        
+
         if let textColorData = UserDefaults.standard.data(forKey: textColorKey),
-           let savedTextColor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: textColorData),
-           let unwrappedTextColor = savedTextColor {
-            textColor = unwrappedTextColor
+           let savedTextColor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: textColorData) {
+            textColor = savedTextColor
         }
     }
     
