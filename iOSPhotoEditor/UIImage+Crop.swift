@@ -21,7 +21,7 @@ extension UIImage {
     }
     
     fileprivate func rotatedImageWithTransform(_ transform: CGAffineTransform) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, true, scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
         let context = UIGraphicsGetCurrentContext()
         context?.translateBy(x: size.width / 2.0, y: size.height / 2.0)
         context?.concatenate(transform)

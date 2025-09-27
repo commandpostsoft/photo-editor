@@ -43,6 +43,12 @@ extension PhotoEditorViewController: UITextViewDelegate {
         }
         activeTextView = nil
         textView.font = self.lastTextViewFont!
+        
+        // Mark image as modified if text was added
+        if !textView.text.isEmpty {
+            hasImageBeenModified = true
+        }
+        
         UIView.animate(withDuration: 0.3,
                        animations: {
                         textView.transform = self.lastTextViewTransform!

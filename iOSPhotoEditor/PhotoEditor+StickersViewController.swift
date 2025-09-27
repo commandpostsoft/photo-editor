@@ -56,6 +56,7 @@ extension PhotoEditorViewController: StickersViewControllerDelegate {
         self.canvasImageView.addSubview(view)
         //Gestures
         addGestures(view: view)
+        hasImageBeenModified = true
     }
     
     func didSelectImage(image: UIImage) {
@@ -69,6 +70,7 @@ extension PhotoEditorViewController: StickersViewControllerDelegate {
         self.canvasImageView.addSubview(imageView)
         //Gestures
         addGestures(view: imageView)
+        hasImageBeenModified = true
     }
     
     func stickersViewDidDisappear() {

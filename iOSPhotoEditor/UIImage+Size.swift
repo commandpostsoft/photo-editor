@@ -30,4 +30,53 @@ public extension UIImage {
         
         return nil
     }
+    
+    /**
+     Returns size that fits within the given bounds while maintaining aspect ratio
+     */
+    func suitableSizeWithinBounds(_ bounds: CGSize) -> CGSize {
+        let imageSize = self.size
+        let imageAspectRatio = imageSize.width / imageSize.height
+        let boundsAspectRatio = bounds.width / bounds.height
+        
+        if imageAspectRatio > boundsAspectRatio {
+            // Image is wider relative to bounds, fit to width
+            let newWidth = bounds.width
+            let newHeight = newWidth / imageAspectRatio
+            return CGSize(width: newWidth, height: newHeight)
+        } else {
+            // Image is taller relative to bounds, fit to height
+            let newHeight = bounds.height
+            let newWidth = newHeight * imageAspectRatio
+            return CGSize(width: newWidth, height: newHeight)
+        }
+    }
+    
+    /**
+     Rotates the image by the specified radians
+     */
+    func rotate(radians: CGFloat) -> UIImage {
+        let rotatedSize = CGRect(origin: .zero, size: size)
+            .applying(CGAffineTransform(rotationAngle: radians))
+            .size
+        
+        UIGraphicsBeginImageContextWithOptions(rotatedSize, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return self }
+        
+        let origin = CGPoint(x: rotatedSize.width / 2.0,
+                             y: rotatedSize.height / 2.0)
+        
+        context.translateBy(x: origin.x, y: origin.y)
+        context.rotate(by: radians)
+        
+        draw(in: CGRect(x: -size.width / 2.0,
+                         y: -size.height / 2.0,
+                         width: size.width,
+                         height: size.height))
+        
+        let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return rotatedImage ?? self
+    }
 }

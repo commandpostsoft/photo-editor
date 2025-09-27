@@ -5,6 +5,7 @@
 //  Created by Mohamed Hamed on 6/16/17.
 //
 //
+
 import UIKit
 
 extension PhotoEditorViewController {
@@ -14,7 +15,14 @@ extension PhotoEditorViewController {
         if isDrawing {
             swiped = false
             if let touch = touches.first {
-                lastPoint = touch.location(in: self.canvasImageView)
+                let canvasPoint = touch.location(in: self.canvasImageView)
+                // Only start drawing if within image bounds
+                if isPointWithinImageBounds(canvasPoint) {
+                    // Convert canvas coordinates to image coordinates
+                    lastPoint = convertCanvasPointToImagePoint(canvasPoint)
+                } else {
+                    lastPoint = nil
+                }
             }
         }
             //Hide stickersVC if clicked outside it
@@ -31,50 +39,92 @@ extension PhotoEditorViewController {
     
     override public func touchesMoved(_ touches: Set<UITouch>,
                                       with event: UIEvent?){
-        if isDrawing {
-            // 6
+        if isDrawing && lastPoint != nil {
             swiped = true
             if let touch = touches.first {
-                let currentPoint = touch.location(in: canvasImageView)
-                drawLineFrom(lastPoint, toPoint: currentPoint)
-                
-                // 7
-                lastPoint = currentPoint
+                let canvasPoint = touch.location(in: canvasImageView)
+                // Only draw if both points are within image bounds
+                if isPointWithinImageBounds(canvasPoint) {
+                    let imagePoint = convertCanvasPointToImagePoint(canvasPoint)
+                    drawLineFrom(lastPoint, toPoint: imagePoint)
+                    lastPoint = imagePoint
+                } else {
+                    // If we move outside bounds, stop the current stroke
+                    lastPoint = nil
+                }
             }
         }
     }
     
     override public func touchesEnded(_ touches: Set<UITouch>,
                                       with event: UIEvent?){
-        if isDrawing {
+        if isDrawing && lastPoint != nil {
             if !swiped {
                 // draw a single point
                 drawLineFrom(lastPoint, toPoint: lastPoint)
             }
         }
-        
+        lastPoint = nil
+        swiped = false
     }
     
     func drawLineFrom(_ fromPoint: CGPoint, toPoint: CGPoint) {
-        // 1
-        let canvasSize = canvasImageView.frame.integral.size
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, 0)
+        // Use display image size for drawing layer to match the visible image exactly
+        let drawingSize = displayImageSize
+        let scale = displayToOriginalScale
+        
+        UIGraphicsBeginImageContextWithOptions(drawingSize, false, UIScreen.main.scale)
         if let context = UIGraphicsGetCurrentContext() {
-            canvasImageView.image?.draw(in: CGRect(x: 0, y: 0, width: canvasSize.width, height: canvasSize.height))
-            // 2
-            context.move(to: CGPoint(x: fromPoint.x, y: fromPoint.y))
-            context.addLine(to: CGPoint(x: toPoint.x, y: toPoint.y))
-            // 3
-            context.setLineCap( CGLineCap.round)
-            context.setLineWidth(5.0)
+            // Draw existing drawing layer
+            canvasImageView.image?.draw(in: CGRect(origin: .zero, size: drawingSize))
+            
+            // Calculate line width that will look good at both display and original resolution
+            let lineWidth: CGFloat = 5.0 / scale
+            
+            // Draw the new line
+            context.move(to: fromPoint)
+            context.addLine(to: toPoint)
+            context.setLineCap(.round)
+            context.setLineWidth(lineWidth)
             context.setStrokeColor(drawColor.cgColor)
-            context.setBlendMode( CGBlendMode.normal)
-            // 4
+            context.setBlendMode(.normal)
             context.strokePath()
-            // 5
+            
             canvasImageView.image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            // Mark image as modified when drawing occurs
+            hasImageBeenModified = true
         }
-        UIGraphicsEndImageContext()
+    }
+    
+    // Helper function to check if a point is within the image bounds
+    func isPointWithinImageBounds(_ point: CGPoint) -> Bool {
+        let imageRect = getImageBoundsInCanvas()
+        return imageRect.contains(point)
+    }
+    
+    // Get the actual image bounds within the canvas view
+    func getImageBoundsInCanvas() -> CGRect {
+        let canvasSize = canvasImageView.bounds.size
+        let imageSize = displayImageSize
+        
+        // Calculate the centered position of the image within the canvas
+        let x = (canvasSize.width - imageSize.width) / 2
+        let y = (canvasSize.height - imageSize.height) / 2
+        
+        return CGRect(x: x, y: y, width: imageSize.width, height: imageSize.height)
+    }
+    
+    // Convert canvas coordinates to image coordinates (for drawing layer)
+    func convertCanvasPointToImagePoint(_ canvasPoint: CGPoint) -> CGPoint {
+        let imageRect = getImageBoundsInCanvas()
+        
+        // Convert from canvas coordinates to image-relative coordinates
+        let relativeX = canvasPoint.x - imageRect.origin.x
+        let relativeY = canvasPoint.y - imageRect.origin.y
+        
+        return CGPoint(x: relativeX, y: relativeY)
     }
     
 }

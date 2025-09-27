@@ -218,8 +218,10 @@ open class CropViewController: UIViewController {
         }
         actionSheet.addAction(cancel)
         
-        if let popoverController = actionSheet.popoverPresentationController {
-            popoverController.barButtonItem = sender
+        // Configure for iPad
+        if let popover = actionSheet.popoverPresentationController {
+            popover.barButtonItem = sender
+            popover.permittedArrowDirections = [.up, .down]
         }
         
         present(actionSheet, animated: true, completion: nil)
