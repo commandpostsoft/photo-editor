@@ -8,7 +8,8 @@
 
 import UIKit
 
-class StickerCollectionViewCell: UICollectionViewCell {
+@objc(StickerCollectionViewCell)
+public class StickerCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var stickerImage: UIImageView!
 
     override func awakeFromNib() {
