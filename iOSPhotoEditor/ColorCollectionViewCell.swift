@@ -10,11 +10,31 @@ import UIKit
 
 @objc(ColorCollectionViewCell)
 public class ColorCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet public weak var colorView: UIView!
 
-    public override func awakeFromNib() {
-        super.awakeFromNib()
+    public let colorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    private func setupView() {
+        contentView.addSubview(colorView)
+        NSLayoutConstraint.activate([
+            colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            colorView.widthAnchor.constraint(equalToConstant: 20),
+            colorView.heightAnchor.constraint(equalToConstant: 20)
+        ])
     }
 
     public override func layoutSubviews() {

@@ -233,7 +233,7 @@ public final class PhotoEditorViewController: UIViewController {
         colorsCollectionView.dataSource = colorsCollectionViewDelegate
         
         colorsCollectionView.register(
-            UINib(nibName: "ColorCollectionViewCell", bundle: Bundle.module),
+            ColorCollectionViewCell.self,
             forCellWithReuseIdentifier: "ColorCollectionViewCell")
     }
     
