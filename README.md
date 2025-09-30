@@ -13,38 +13,31 @@
 
 ## Installation
 
-### CocoaPods
+### Swift Package Manager
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
+Add the following to your `Package.swift` file:
 
-```bash
-$ gem install cocoapods
-```
-To integrate iOS Photo Editor into your Xcode project using CocoaPods, specify it in your `Podfile`:
-```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.0'
-use_frameworks!
-
-target '<Your Target Name>' do
-    pod 'iOSPhotoEditor'
-end
+```swift
+dependencies: [
+    .package(url: "https://github.com/M-Hamed/photo-editor.git", from: "1.0.0")
+]
 ```
 
-Then, run the following command:
-
-```bash
-$ pod install
-```
+Or in Xcode:
+1. Go to **File → Add Package Dependencies**
+2. Enter the repository URL: `https://github.com/M-Hamed/photo-editor.git`
+3. Select the version you want to use
 
 ## Usage
 
-### Photo
+### Photo Editor
 
-The `PhotoEditorViewController`.
+Create and present the `PhotoEditorViewController`:
 
 ```swift
-let photoEditor = PhotoEditorViewController(nibName:"PhotoEditorViewController",bundle: Bundle(for: PhotoEditorViewController.self))
+import iOSPhotoEditor
+
+let photoEditor = PhotoEditorViewController()
 
 //PhotoEditorDelegate
 photoEditor.photoEditorDelegate = self

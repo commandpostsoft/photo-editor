@@ -66,13 +66,8 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
         collectioView.delegate = self
         collectioView.dataSource = self
         
-        #if SWIFT_PACKAGE
-        let stickerCellBundle = Bundle.module
-        #else
-        let stickerCellBundle = Bundle(for: StickerCollectionViewCell.self)
-        #endif
         collectioView.register(
-            UINib(nibName: "StickerCollectionViewCell", bundle: stickerCellBundle),
+            UINib(nibName: "StickerCollectionViewCell", bundle: Bundle.module),
             forCellWithReuseIdentifier: "StickerCollectionViewCell")
         
         //-----------------------------------
@@ -94,13 +89,8 @@ class StickersViewController: UIViewController, UIGestureRecognizerDelegate {
         emojisCollectioView.delegate = emojisDelegate
         emojisCollectioView.dataSource = emojisDelegate
         
-        #if SWIFT_PACKAGE
-        let emojiCellBundle = Bundle.module
-        #else
-        let emojiCellBundle = Bundle(for: EmojiCollectionViewCell.self)
-        #endif
         emojisCollectioView.register(
-            UINib(nibName: "EmojiCollectionViewCell", bundle: emojiCellBundle),
+            UINib(nibName: "EmojiCollectionViewCell", bundle: Bundle.module),
             forCellWithReuseIdentifier: "EmojiCollectionViewCell")
         
     }

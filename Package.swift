@@ -42,9 +42,6 @@ let package = Package(
                 .process("PhotoCropEditorBorder.png"),
                 .process("PhotoCropEditorBorder@2x.png"),
                 .process("PhotoCropEditorBorder@3x.png")
-            ],
-            swiftSettings: [
-                .define("SPM_BUILD", .when(configuration: .debug))
             ]
         )
     ],
