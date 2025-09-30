@@ -89,6 +89,19 @@ public final class PhotoEditorViewController: UIViewController {
     
     var stickersViewController: StickersViewController!
 
+    public init() {
+        #if SWIFT_PACKAGE
+        let bundle = Bundle.module
+        #else
+        let bundle = Bundle(for: PhotoEditorViewController.self)
+        #endif
+        super.init(nibName: "PhotoEditorViewController", bundle: bundle)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     //Register Custom font before we load XIB
     public override func loadView() {
         registerFont()
@@ -119,7 +132,12 @@ public final class PhotoEditorViewController: UIViewController {
         
         
         configureCollectionView()
-        stickersViewController = StickersViewController(nibName: "StickersViewController", bundle: Bundle(for: StickersViewController.self))
+        #if SWIFT_PACKAGE
+        let stickersBundle = Bundle.module
+        #else
+        let stickersBundle = Bundle(for: StickersViewController.self)
+        #endif
+        stickersViewController = StickersViewController(nibName: "StickersViewController", bundle: stickersBundle)
         hideControls()
         loadSavedColors()
     }
@@ -224,8 +242,13 @@ public final class PhotoEditorViewController: UIViewController {
         colorsCollectionView.delegate = colorsCollectionViewDelegate
         colorsCollectionView.dataSource = colorsCollectionViewDelegate
         
+        #if SWIFT_PACKAGE
+        let colorCellBundle = Bundle.module
+        #else
+        let colorCellBundle = Bundle(for: ColorCollectionViewCell.self)
+        #endif
         colorsCollectionView.register(
-            UINib(nibName: "ColorCollectionViewCell", bundle: Bundle(for: ColorCollectionViewCell.self)),
+            UINib(nibName: "ColorCollectionViewCell", bundle: colorCellBundle),
             forCellWithReuseIdentifier: "ColorCollectionViewCell")
     }
     
