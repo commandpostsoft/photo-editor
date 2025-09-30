@@ -8,15 +8,16 @@
 
 import UIKit
 
-class ColorCollectionViewCell: UICollectionViewCell {
+@objc(ColorCollectionViewCell)
+public class ColorCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var colorView: UIView!
-    
-    override func awakeFromNib() {
+    @IBOutlet public weak var colorView: UIView!
+
+    public override func awakeFromNib() {
         super.awakeFromNib()
     }
-    
-    override func layoutSubviews() {
+
+    public override func layoutSubviews() {
         super.layoutSubviews()
         colorView.layer.cornerRadius = colorView.frame.width / 2
         colorView.clipsToBounds = true
@@ -24,7 +25,7 @@ class ColorCollectionViewCell: UICollectionViewCell {
         colorView.layer.borderColor = UIColor.white.cgColor
     }
     
-    override var isSelected: Bool {
+    public override var isSelected: Bool {
         didSet {
             if isSelected {
                 let previouTransform =  colorView.transform

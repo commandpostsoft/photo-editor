@@ -8,11 +8,12 @@
 
 import UIKit
 
-class EmojiCollectionViewCell: UICollectionViewCell {
+@objc(EmojiCollectionViewCell)
+public class EmojiCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var emojiLabel: UILabel!
-    
-    override func awakeFromNib() {
+    @IBOutlet public weak var emojiLabel: UILabel!
+
+    public override func awakeFromNib() {
         super.awakeFromNib()
     }
 
